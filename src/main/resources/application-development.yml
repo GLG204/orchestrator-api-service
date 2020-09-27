@@ -1,0 +1,91 @@
+server:
+  port: 9595
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: orchestrator-api
+  datasource:
+    username: postgres
+    password: root
+    url: jdbc:postgresql://localhost:5432/voip
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      minimumIdle: 5
+      maximumPoolSize: 20
+      idleTimeout: 30000
+      poolName: pool
+      maxLifetime: 2000000
+      connectionTimeout: 30000
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+  jpa:
+    show-sql: true
+    database: postgresql
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    properties:
+      hibernate:
+        default_schema: api
+  boot:
+    admin:
+      client:
+        url: http://127.0.0.1:8082
+        instance:
+          prefer-ip: true
+        username: cloud
+        password: cloud@123
+        enabled: false
+  cloud:
+    consul:
+      discovery:
+        instance-id: ${spring.application.name}:${spring.cloud.consul.host}
+        prefer-ip-address: true
+        tags: version=1.0
+        healthCheckPath: /actuator/health
+        healthCheckInterval: 10s
+        healthCheckTimeout: 60s
+        healthCheckCriticalTimeout: 5m
+      retry:
+        max-attempts: 100
+        max-interval: 1000
+      enabled: false
+      host: 127.0.0.1
+    loadbalancer:
+      ribbon:
+        enabled: false
+  jackson:
+    default-property-inclusion: non_null
+  output:
+    ansi:
+      enabled: always
+
+info:
+  tags:
+    environment: development
+  app:
+    name: '@pom.artifactId@'
+    description: '@pom.description@'
+    version: '@pom.version@'
+
+logging:
+  config: src/main/resources/log4j2.xml
+  file:
+    name: logs/${spring.application.name}.log
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  server:
+    port: 9080
