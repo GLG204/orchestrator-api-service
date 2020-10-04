@@ -4,6 +4,7 @@ import com.dandach.voip.orchestrator.api.control.Subscriber;
 import com.dandach.voip.orchestrator.api.control.credential.payment.Payment;
 import com.dandach.voip.orchestrator.api.control.credential.session.Session;
 import com.dandach.voip.orchestrator.api.control.credential.simcard.SimCard;
+import com.dandach.voip.orchestrator.api.control.credential.sipaccount.SipAccount;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -70,8 +71,14 @@ public class Account {
     private Set<Payment> payments;
 
     /**
-     * Relation With Payment
+     * Relation With SIM Card
      */
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private Set<SimCard> simCards;
+
+    /**
+     * Relation with SIP Account
+     */
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    private Set<SipAccount> sipAccounts;
 }
